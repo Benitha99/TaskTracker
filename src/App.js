@@ -3,14 +3,29 @@ import Header from "./components/Header";
 import Tasks from "./components/Tasks";
 import { useState,useEffect } from 'react'
 import AddTask from "./components/AddTask";
+
+const getLocalStorage=()=>{
+  let list=localStorage.getItem("lists");
+  if(list){
+    return JSON.parse(localStorage.getItem('lists'));
+
+  }else{
+    return []
+  }
+}
+
 function App() {
 const[showAddTask,setShowAddTask]=useState(false);
- const[tasks,setTasks]=useState([]);
+ const[tasks,setTasks]=useState(getLocalStorage());
 
 const deleteTask=(id)=>{
   setTasks(tasks.filter((task)=>task.id !==id))
 }
 
+
+useEffect(()=>{
+  localStorage.setItem("lists",JSON.stringify(tasks))
+},[tasks])
 const toggleReminder=(id) =>{
  setTasks(tasks.map((task)=>task.id===id ? {...task,reminder: !task.reminder}:task))
  
